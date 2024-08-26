@@ -43,11 +43,9 @@ Galia's `plugins` directory and restart Galia. The resource is now available at
 # Using dependencies
 
 This example does not use any third-party dependencies, which keeps things
-simple. Most real-world resources probably wouldn't need to rely on any such
-dependencies.
-
-If you wanted to bring in other dependencies, the way other plugins do it is by
-including them in a `lib` folder within the plugin's folder.
+simple. But if you wanted to bring in other dependencies, the way other plugins
+do it is by including them in a `lib` folder within the plugin's folder, where
+the plugin class loader will find them.
 
 When choosing a dependency, first check whether Galia includes it, and use
 that, if possible. Bundling a different version of a dependency than the one
