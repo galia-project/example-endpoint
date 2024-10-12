@@ -60,10 +60,10 @@ public class ThumbnailResource extends AbstractImageResource
     private class ExampleImageRequestHandlerCallback
             implements ImageRequestHandler.Callback {
         @Override
-        public boolean preAuthorize() throws Exception {
+        public boolean authorizeBeforeAccess() throws Exception {
             final Authorizer authorizer =
                     new AuthorizerFactory().newAuthorizer(getDelegate());
-            final AuthInfo info = authorizer.preAuthorize();
+            final AuthInfo info = authorizer.authorizeBeforeAccess();
             if (info != null) {
                 return handleAuthInfo(info);
             }
