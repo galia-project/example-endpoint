@@ -13,8 +13,7 @@ demonstrates how to:
     * Write to the response body
 * Process images using an ImageRequestHandler, which itself abstracts away all
   of the complexities related to:
-    * Authorization (using the delegate `pre_authorize()` and `authorize()`
-      methods)
+    * Authorization (using delegate methods)
     * Source access
     * Image processing
     * Caching
