@@ -22,10 +22,12 @@ import is.galia.auth.AuthorizerFactory;
 import is.galia.config.Configuration;
 import is.galia.http.Method;
 import is.galia.http.Query;
+import is.galia.http.Reference;
 import is.galia.http.Status;
 import is.galia.image.Format;
 import is.galia.image.Identifier;
 import is.galia.image.Info;
+import is.galia.image.MetaIdentifier;
 import is.galia.image.StatResult;
 import is.galia.operation.Crop;
 import is.galia.operation.CropToSquare;
@@ -86,7 +88,7 @@ public class ThumbnailResource extends AbstractImageResource
         @Override
         public void infoAvailable(Info info) throws Exception {}
         @Override
-        public void willStreamImageFromVariantCache() throws Exception {}
+        public void willStreamImageFromVariantCache(StatResult result) throws Exception {}
         @Override
         public void willProcessImage(Info info) throws Exception {}
     }
@@ -127,14 +129,28 @@ public class ThumbnailResource extends AbstractImageResource
     public Identifier getIdentifier() {
         if (identifier == null) {
             identifier = parseIdentifier();
-            getRequestContext().setIdentifier(identifier);
         }
         return identifier;
     }
 
     @Override
+    protected MetaIdentifier getMetaIdentifier() {
+        return new MetaIdentifier(getIdentifier());
+    }
+
+    @Override
     protected Logger getLogger() {
         return LOGGER;
+    }
+
+    @Override
+    protected Reference getPublicReference(MetaIdentifier newMetaIdentifier) {
+        final Reference publicRef = getPublicReference();
+        final String newMetaIdentifierString =
+                newMetaIdentifier.forURI(getDelegate());
+        return publicRef.rebuilder()
+                .withQuery(new Query("identifier=" + newMetaIdentifierString))
+                .build();
     }
 
     //endregion
@@ -171,7 +187,7 @@ public class ThumbnailResource extends AbstractImageResource
         // Build an OperationList which fully defines our desired variant
         // image.
         OperationList opList = OperationList.builder()
-                .withIdentifier(identifier)
+                .withIdentifier(getIdentifier())
                 .withOperations(crop, scale, encode)
                 .build();
 
@@ -193,8 +209,8 @@ public class ThumbnailResource extends AbstractImageResource
                 .build();
 
         // The handler will write the variant image data to the response
-        // OutputStream. This stream should not be closed here.
-        handler.handle(getResponse().openBodyStream());
+        // OutputStream.
+        handler.handle(getResponse());
     }
 
     /**
