@@ -21,9 +21,12 @@ demonstrates how to:
 # Development
 
 For development, a Galia JAR must be present on the classpath. One way to
-get it there is to run `mvn install` from the Galia source root, which will
-install it into your local repository. (This is the method used by this
-example.)
+get it there is to install it into your local Maven repository:
+
+```sh
+mvn install:install-file -Dfile=galia-core-1.0.1.jar -DgroupId=is.galia \
+    -DartifactId=galia-core -Dversion=1.0.1 -Dpackaging=jar
+```
 
 # How it works
 
@@ -31,7 +34,7 @@ The idea is to use Maven to build a JAR file that declares an implementation
 of Galia's `is.galia.resource.Resource`
 [service](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/class-use/ServiceLoader.html).
 So you must have Maven installed, but that is the only dependency. You could
-also use Gradle, or some other build tool.
+also use Gradle, or some other build tool, or no build tool.
 
 `mvn package` will build a JAR file in the `target` directory. Copy it into
 Galia's `plugins` directory and restart Galia. The resource is now available at
@@ -52,5 +55,6 @@ used by Galia could cause problems.
 
 # API Compatibility
 
-Galia makes an effort to maintain semantic versioning, but API compatibility
-across minor releases is not guaranteed. 
+Galia makes an effort to maintain semantic versioning. New patch versions
+are always compatible; new minor releases should be backwards-compatible;
+and new major ones will probably not be.
